@@ -1,0 +1,98 @@
+<link rel='import' href='../polymer/polymer.html'>
+<link rel='import' href='../app-storage/app-storage-behavior.html'>
+<link rel='import' href='simple-db-database-behavior.html'>
+
+<!--
+`simple-db-document`
+implementation of Polymer.AppStorageBehavior for reading and writing to SimpleDB documents
+
+@demo demo/index.html
+-->
+
+<dom-module id='simple-db-document'>
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    'use strict';
+
+    Polymer({
+      is: 'simple-db-document',
+
+      behaviors: [
+        Polymer.AppStorageBehavior,
+        Polymer.SimpleDBDatabaseBehavior
+      ],
+
+      properties: {
+        data: {
+          type: Object,
+          notify: true
+        },
+        key: {
+          type: String,
+          notify: true
+        }
+      },
+
+      get isNew() {
+        return !this.key;
+      },
+
+      destroy: function() {
+        var ctx = this;
+        return ctx.db.destroy(ctx.key)
+          .then(function(result) {
+            ctx.set('data', ctx.zeroValue);
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+      },
+
+      get: function() {
+        var ctx = this;
+        return ctx.db.get(ctx.key)
+          .then(function(row) {
+            ctx.set('data', row && row.data || ctx.zeroValue);
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+      },
+
+      getStoredValue: function(path) {
+        return this.get();
+      },
+
+      reset: function() {
+        this.key = null;
+        this.data = this.zeroValue;
+      },
+
+      save: function() {
+        var obj = {
+          _id: this.key,
+          data: this.data
+        };
+
+        var ctx = this;
+        return ctx.db.save(obj)
+          .then(function(row) {
+            ctx.set('data', row.data || ctx.zeroValue);
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+      },
+
+      setStoredValue: function(path, value) {
+      }
+    });
+  </script>
+</dom-module>

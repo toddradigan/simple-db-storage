@@ -1,0 +1,34 @@
+<link rel='import' href='../polymer/polymer.html'>
+<script src='../simple-db/simple-db.js'></script>
+
+<script>
+  (function() {
+    'use strict';
+
+    Polymer.SimpleDBDatabaseBehavior = {
+      properties: {
+        dbName: {
+          type: String
+        },
+
+        db: {
+          type: Object,
+          computed: '_computeDb(dbName)',
+          notify: true,
+        }
+      },
+
+      _computeDb: function(name) {
+        if (!name) {
+          return null;
+        }
+
+        var options = {
+          auto_compaction: true
+        };
+
+        return new SimpleDB(name);
+      }
+    };
+  })();
+</script>
