@@ -1,0 +1,68 @@
+<link rel='import' href='../polymer/polymer.html'>
+<link rel='import' href='simple-db-database-behavior.html'>
+
+<!--
+`simple-db-query`
+implementation of querying for SimpleDB
+
+@demo demo/index.html
+-->
+
+<dom-module id='simple-db-query'>
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    'use strict';
+
+    Polymer({
+      is: 'simple-db-query',
+
+      behaviors: [
+        Polymer.SimpleDBDatabaseBehavior
+      ],
+
+      properties: {
+        data: {
+          type: Array,
+          readOnly: true,
+          notify: true,
+          value: function() { return []; }
+        },
+        limit: {
+          type: Number,
+          value: 0
+        },
+        selector: {
+          type: String
+        },
+        skip: {
+          type: Number,
+          value: 0
+        },
+        sort: {
+          type: Array,
+          value: function() { return []; }
+        }
+      },
+
+      execute: function() {
+        var ctx = this;
+        return ctx.db.find()
+          .then(function(results) {
+            ctx._setData(results || []);
+            return results;
+          })
+          .catch(function(error) {
+            ctx._setData(undefined)
+            console.error(error);
+          });
+      }
+    });
+  </script>
+</dom-module>

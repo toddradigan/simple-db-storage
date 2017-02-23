@@ -1,5 +1,5 @@
 <link rel='import' href='../polymer/polymer.html'>
-<script src='../simple-db/simple-db.js'></script>
+<link rel='import' href='../simple-db/simple-db.html'>
 
 <script>
   (function() {
@@ -13,12 +13,19 @@
 
         db: {
           type: Object,
-          computed: '_computeDb(dbName)',
+          computed: '_computeDb(dbName, _workerUrl)',
           notify: true,
+        },
+
+        _workerUrl: {
+          type: String,
+          value: function() {
+            return this.resolveUrl('../simple-db/simple-db-worker.js');
+          }
         }
       },
 
-      _computeDb: function(name) {
+      _computeDb: function(name, url) {
         if (!name) {
           return null;
         }
@@ -27,7 +34,7 @@
           auto_compaction: true
         };
 
-        return new SimpleDB(name);
+        return new SimpleDB(name, url);
       }
     };
   })();
