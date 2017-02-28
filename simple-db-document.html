@@ -60,9 +60,7 @@ implementation of Polymer.AppStorageBehavior for reading and writing to SimpleDB
         return ctx.db.get(ctx.key)
           .then(function(row) {
             ctx.set('data', row || ctx.zeroValue);
-          })
-          .catch(function(error) {
-            console.error(error);
+            return row || ctx.zeroValue;
           });
       },
 
@@ -80,9 +78,7 @@ implementation of Polymer.AppStorageBehavior for reading and writing to SimpleDB
         return ctx.db.save(this.key, this.data)
           .then(function(row) {
             ctx.set('data', row || ctx.zeroValue);
-          })
-          .catch(function(error) {
-            console.error(error);
+            return row || ctx.zeroValue;
           });
       },
 
