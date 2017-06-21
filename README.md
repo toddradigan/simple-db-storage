@@ -2,37 +2,33 @@
 
 implementation of Polymer.AppStorageBehavior for reading and writing to SimpleDB documents
 
-## Install the Polymer-CLI
-
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
-
-## Viewing Your Application
-
 ```
-$ polymer serve
+  <simple-db-document
+    id='doc'
+    db-name='myDB'>
+  </simple-db-document>
 ```
 
-## Building Your Application
-
 ```
-$ polymer build
-```
-
-This will create a `build/` folder with `bundled/` and `unbundled/` sub-folders
-containing a bundled (Vulcanized) and unbundled builds, both run through HTML,
-CSS, and JS optimizers.
-
-You can serve the built versions by giving `polymer serve` a folder to serve
-from:
-
-```
-$ polymer serve build/bundled
+saveMyObject(key, obj) {
+  this.$.doc.key = key;
+  this.$.doc.data = obj;
+  this.$.doc.save();
+}
 ```
 
-## Running Tests
+# \<simple-db-query\>
 
 ```
-$ polymer test
+<simple-db-query
+  id='query'
+  data='{{_list}}'
+  db-name='myDB'>
+</simple-db-query>
 ```
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+```
+loadMyObjects() {
+  this.$.query.execute();
+}
+```
