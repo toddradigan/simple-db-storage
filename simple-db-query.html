@@ -18,40 +18,37 @@ implementation of querying for SimpleDB
   </template>
 
   <script>
-    'use strict';
+    class SimpleDBQuery extends SimpleDBDatabaseBehavior(Polymer.Element) {
 
-    Polymer({
-      is: 'simple-db-query',
+      static get is() { return 'simple-db-query'; }
 
-      behaviors: [
-        Polymer.SimpleDBDatabaseBehavior
-      ],
-
-      properties: {
-        data: {
-          type: Array,
-          readOnly: true,
-          notify: true,
-          value: function() { return []; }
-        },
-        limit: {
-          type: Number,
-          value: 0
-        },
-        selector: {
-          type: String
-        },
-        skip: {
-          type: Number,
-          value: 0
-        },
-        sort: {
-          type: Array,
-          value: function() { return []; }
+      static get properties() {
+        return {
+          data: {
+            type: Array,
+            readOnly: true,
+            notify: true,
+            value: function() { return []; }
+          },
+          limit: {
+            type: Number,
+            value: 0
+          },
+          selector: {
+            type: String
+          },
+          skip: {
+            type: Number,
+            value: 0
+          },
+          sort: {
+            type: Array,
+            value: function() { return []; }
+          }
         }
-      },
+      }
 
-      execute: function() {
+      execute() {
         var ctx = this;
         return ctx.db.find()
           .then(function(results) {
@@ -63,6 +60,7 @@ implementation of querying for SimpleDB
             console.error(error);
           });
       }
-    });
+    }
+    window.customElements.define(SimpleDBQuery.is, SimpleDBQuery);
   </script>
 </dom-module>

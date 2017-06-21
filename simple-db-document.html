@@ -19,32 +19,34 @@ implementation of Polymer.AppStorageBehavior for reading and writing to SimpleDB
   </template>
 
   <script>
-    'use strict';
+    class SimpleDBDocument extends SimpleDBDatabaseBehavior(Polymer.Element) {
 
-    Polymer({
-      is: 'simple-db-document',
+      static get is() { return 'simple-db-document'; }
 
-      behaviors: [
-        Polymer.AppStorageBehavior,
-        Polymer.SimpleDBDatabaseBehavior
-      ],
-
-      properties: {
-        data: {
-          type: Object,
-          notify: true
-        },
-        key: {
-          type: String,
-          notify: true
+      static get properties() {
+        return {
+          data: {
+            type: Object,
+            notify: true
+          },
+          key: {
+            type: String,
+            notify: true
+          }
         }
-      },
+      }
+
+      static get behaviors() {
+        return [
+          Polymer.AppStorageBehavior
+        ];
+      }
 
       get isNew() {
         return !this.key;
-      },
+      }
 
-      destroy: function() {
+      destroy() {
         var ctx = this;
         return ctx.db.destroy(ctx.key)
           .then(function(result) {
@@ -53,37 +55,38 @@ implementation of Polymer.AppStorageBehavior for reading and writing to SimpleDB
           .catch(function(error) {
             console.error(error);
           });
-      },
+      }
 
-      get: function() {
+      get() {
         var ctx = this;
         return ctx.db.get(ctx.key)
           .then(function(row) {
             ctx.set('data', row || ctx.zeroValue);
             return row || ctx.zeroValue;
           });
-      },
+      }
 
-      getStoredValue: function(path) {
+      getStoredValue(path) {
         return this.get();
-      },
+      }
 
-      reset: function() {
+      reset() {
         this.key = null;
         this.data = this.zeroValue;
-      },
+      }
 
-      save: function() {
+      save() {
         var ctx = this;
         return ctx.db.save(this.key, this.data)
           .then(function(row) {
             ctx.set('data', row || ctx.zeroValue);
             return row || ctx.zeroValue;
           });
-      },
-
-      setStoredValue: function(path, value) {
       }
-    });
+
+      setStoredValue(path, value) {
+      }
+    }
+    window.customElements.define(SimpleDBDocument.is, SimpleDBDocument);
   </script>
 </dom-module>

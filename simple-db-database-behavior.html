@@ -3,30 +3,30 @@
 <link rel='import' href='../simple-db/simple-db-worker.js'>
 
 <script>
-  (function() {
-    'use strict';
+  SimpleDBDatabaseBehavior = function(superClass) {
+    return class extends superClass {
+      static get properties() {
+        return {
+          dbName: {
+            type: String
+          },
 
-    Polymer.SimpleDBDatabaseBehavior = {
-      properties: {
-        dbName: {
-          type: String
-        },
+          db: {
+            type: Object,
+            computed: '_computeDb(dbName, _workerUrl)',
+            notify: true,
+          },
 
-        db: {
-          type: Object,
-          computed: '_computeDb(dbName, _workerUrl)',
-          notify: true,
-        },
-
-        _workerUrl: {
-          type: String,
-          value: function() {
-            return this.resolveUrl('../simple-db/simple-db-worker.js');
+          _workerUrl: {
+            type: String,
+            value: function() {
+              return this.resolveUrl('../simple-db/simple-db-worker.js');
+            }
           }
         }
-      },
+      }
 
-      _computeDb: function(name, url) {
+      _computeDb(name, url) {
         if (!name) {
           return null;
         }
@@ -37,6 +37,6 @@
 
         return new SimpleDB(name, url);
       }
-    };
-  })();
+    }
+  }
 </script>
